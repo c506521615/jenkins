@@ -1,0 +1,35 @@
+pipeline{
+    agent{
+        label 'master'
+    }
+    tools {
+        maven 'maven38'
+    }
+    stages{
+        stage ('Get the source code') {
+            steps {
+                git 'https://github.com/c506521615/addressbook.git'
+            }
+        }
+        stage ('compile app') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage ('code scan') {
+            steps {
+                sh 'mvn -P metrics pmd:pmd'
+            }
+        }
+        stage ('unit test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage ('package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+    }
+    }
